@@ -34,7 +34,10 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose, file
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: { [fileConfig.accept.split(',')[0]]: [] },
+    accept: {
+      'application/vnd.ms-excel': ['.xls'],
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx']
+    },
     onDragEnter: () => setIsDragging(true),
     onDragLeave: () => setIsDragging(false)
   });
@@ -56,7 +59,7 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose, file
         formData.append('file', file);
       });
 
-      const response = await fetch(`${BASE_URL}${DASHBOARD_ENDPOINTS.FILE_UPLOAD}`, {
+      const response = await fetch(`${DASHBOARD_ENDPOINTS.FILE_UPLOAD}`, {
         method: 'POST',
         body: formData,
       });
@@ -66,13 +69,12 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose, file
         throw new Error(errorData.message || 'Upload failed');
       }
 
-      setUploadStatus('success');
       onFileUpload(true);
       setTimeout(() => {
         onClose();
         setFiles([]);
         setUploadStatus('idle');
-      }, 1500);
+      }, 1000);
     } catch (error: any) {
       setUploadStatus('error');
       setError(error.message || 'Something went wrong');

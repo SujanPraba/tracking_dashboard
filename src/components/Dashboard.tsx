@@ -22,6 +22,7 @@ import { useDashboardData } from '../hooks/useDashboardData';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getClicksPerPost, getEngagementDataByOverTime, getEngagementDataByPost, getTileData, getWordCloudData } from '../api/dashboardApi';
 import toast, { Toaster } from 'react-hot-toast';
+import loadingUi from "../assets/loader.svg"
 
 const Dashboard: React.FC = () => {
   const [filters, setFilters] = useState<DashboardFilters>({
@@ -39,7 +40,7 @@ const Dashboard: React.FC = () => {
   const [hashtagPerformance, setHashtagPerformance] = useState<any>([]);
   const [sentimentData, setSentimentData] = useState<any>([]);
   const { metrics, keywordData, frequencyData, videoEngagementData, loading, error } = useDashboardData(filters);
-
+  const [loadingUix, setLoadingUix] = useState<boolean>(false);
   const handleRetry = () => {
     setFilters({ ...filters });
   };
@@ -49,6 +50,7 @@ const Dashboard: React.FC = () => {
   }, []);
 
   const initailCall =()=>{
+    setLoadingUix(false);
     getTileData(null,setTileData);
     getWordCloudData(null, setWordCloudData, setHashtagPerformance, setSentimentData);
     getEngagementDataByPost(null, setEngagementDataByPost);
@@ -59,56 +61,13 @@ const Dashboard: React.FC = () => {
   // Transform tile data into metrics
   const linkedInMetrics = transformLinkedInMetrics(tileData);
 
-  // Mock data for LinkedIn charts
-  const mockLinkedInData = {
-    engagement: Array.from({ length: 7 }, (_, i) => ({
-      date: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString(),
-      engagement: Math.floor(Math.random() * 100)
-    })).reverse(),
-    followers: Array.from({ length: 7 }, (_, i) => ({
-      date: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString(),
-      followers: 1000 + Math.floor(Math.random() * 100)
-    })).reverse(),
-    postTypes: [
-      { type: 'Text', engagement: 45 },
-      { type: 'Image', engagement: 75 },
-      { type: 'Video', engagement: 60 },
-      { type: 'Article', engagement: 30 }
-    ],
-    demographics: [
-      { name: 'Technology', value: 35 },
-      { name: 'Marketing', value: 25 },
-      { name: 'Finance', value: 20 },
-      { name: 'HR', value: 15 },
-      { name: 'Others', value: 5 }
-    ],
-    clicks: [
-      { postType: 'Text', clicks: 120, ctr: 2.5 },
-      { postType: 'Image', clicks: 250, ctr: 3.8 },
-      { postType: 'Video', clicks: 180, ctr: 3.2 },
-      { postType: 'Article', clicks: 90, ctr: 1.8 }
-    ],
-    sentiment: Array.from({ length: 7 }, (_, i) => ({
-      date: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString(),
-      positive: 30 + Math.random() * 20,
-      neutral: 40 + Math.random() * 20,
-      negative: 10 + Math.random() * 10
-    })).reverse(),
-    timeOfDay: Array.from({ length: 24 }, (_, i) => ({
-      hour: i,
-      engagement: 20 + Math.random() * 80
-    })),
-    hashtags: [
-      { hashtag: '#innovation', engagement: 85 },
-      { hashtag: '#technology', engagement: 72 },
-      { hashtag: '#leadership', engagement: 68 },
-      { hashtag: '#business', engagement: 55 },
-      { hashtag: '#marketing', engagement: 48 }
-    ],
 
-  };
   const fileUploadOnSuccess = ()=>{
-    initailCall();
+    setLoadingUix(true);
+    setTimeout(()=>{
+      initailCall();
+
+    },1500)
   }
 
   const renderContent = () => {
@@ -181,6 +140,8 @@ const Dashboard: React.FC = () => {
   };
 
   return (
+    <>
+    {loadingUix && <div className="fixed inset-0 flex justify-center items-center bg-black/30 backdrop-blur-sm z-50"><img src={loadingUi} alt="loading" className="w-[100px] h-[100px]" /></div>}
     <div className="min-h-screen bg-gray-50 dark:bg-gray-800 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-1 py-0 space-y-2">
         <Toaster/>
@@ -188,6 +149,7 @@ const Dashboard: React.FC = () => {
         {renderContent()}
       </div>
     </div>
+    </>
   );
 };
 
