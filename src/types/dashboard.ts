@@ -8,10 +8,37 @@ export interface SocialMediaPlatform {
 export interface MetricData {
   id: string;
   title: string;
-  value: number;
+  value: number | string;
   change: number;
   changeType: 'increase' | 'decrease' | 'neutral';
-  icon: string;
+  icon: any;
+}
+
+export interface LinkedInMetrics {
+  profileViews?: {
+    value: number;
+    change: number;
+  };
+  postReach?: {
+    value: number;
+    change: number;
+  };
+  postLikes?: {
+    value: number;
+    change: number;
+  };
+  engagementRate?: {
+    value: number;
+    change: number;
+  };
+  clickThroughRate?: {
+    value: number;
+    change: number;
+  };
+  topPerformingPost?: {
+    title: string;
+    change: number;
+  };
 }
 
 export interface ChartDataPoint {

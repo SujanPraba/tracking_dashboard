@@ -5,6 +5,15 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    exclude: ['lucide-react'],
+    include: ['react-is'],
+    esbuildOptions: {
+      target: 'es2020'
+    }
   },
+  build: {
+    target: 'es2020',
+    rollupOptions: {
+      external: ['chart.js']
+    }
+  }
 });

@@ -1,22 +1,23 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { X, Upload, File } from 'lucide-react';
+import { X, Upload, File, CheckCircle, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import UploadingAnimation from './UploadingAnimation';
 import { fileTypeConfigs, type FileTypeConfig } from '../../utils/fileTypes';
+import DASHBOARD_ENDPOINTS, { BASE_URL } from '../../api/endPoints';
 
 interface FileUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
   fileType: keyof typeof fileTypeConfigs;
+  onFileUpload: (success: boolean) => void;
 }
 
-const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose, fileType }) => {
+const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose, fileType, onFileUpload }) => {
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [uploadStatus, setUploadStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const fileConfig: FileTypeConfig = fileTypeConfigs[fileType];
   const FileIcon = fileConfig.icon;
@@ -28,6 +29,7 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose, file
     }
     setError(null);
     setFiles(prev => [...prev, ...acceptedFiles]);
+    setUploadStatus('idle');
   }, [fileConfig]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -41,25 +43,43 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose, file
     setFiles(files.filter(file => file !== fileToRemove));
   };
 
-  useEffect(() => {
-    if (isUploading && uploadProgress < 100) {
-      const timer = setTimeout(() => {
-        setUploadProgress(prev => Math.min(prev + 10, 100));
-      }, 500);
+  const handleUpload = async () => {
+    if (files.length === 0) return;
 
-      return () => clearTimeout(timer);
-    } else if (uploadProgress === 100) {
-      setTimeout(() => {
-        setIsUploading(false);
-        setUploadProgress(0);
-        setFiles([]);
-        onClose();
-      }, 500);
-    }
-  }, [isUploading, uploadProgress, onClose]);
-
-  const handleUpload = () => {
     setIsUploading(true);
+    setError(null);
+    setUploadStatus('idle');
+
+    try {
+      const formData = new FormData();
+      files.forEach(file => {
+        formData.append('file', file);
+      });
+
+      const response = await fetch(`${BASE_URL}${DASHBOARD_ENDPOINTS.FILE_UPLOAD}`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.status) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Upload failed');
+      }
+
+      setUploadStatus('success');
+      onFileUpload(true);
+      setTimeout(() => {
+        onClose();
+        setFiles([]);
+        setUploadStatus('idle');
+      }, 1500);
+    } catch (error: any) {
+      setUploadStatus('error');
+      setError(error.message || 'Something went wrong');
+      onFileUpload(false);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -67,7 +87,6 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose, file
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="fixed inset-0 flex items-center justify-center">
-        {/* Background overlay */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -76,12 +95,12 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose, file
           onClick={onClose}
         />
 
-        {/* Modal panel */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="relative bg-white dark:bg-gray-800 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all w-full max-w-2xl mx-4 z-10">
+          className="relative bg-white dark:bg-gray-800 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all w-full max-w-2xl mx-4 z-10"
+        >
           <div className="absolute top-0 right-0 pt-4 pr-4">
             <button
               type="button"
@@ -96,7 +115,10 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose, file
           <div className="sm:flex sm:items-start">
             <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
               {isUploading ? (
-                <UploadingAnimation progress={uploadProgress} fileType={fileType} />
+                <div className="mt-3 text-gray-500 text-sm flex items-center">
+                  <Upload className="h-4 w-4 mr-2 animate-spin" />
+                  Uploading...
+                </div>
               ) : (
                 <>
                   <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">
@@ -197,26 +219,38 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose, file
             </div>
           </div>
 
-          {/* Action buttons */}
-          {!isUploading && (
-            <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse gap-2">
-              <button
-                type="button"
-                className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-500 text-base font-medium text-white hover:bg-primary-600 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed`}
-                onClick={handleUpload}
-                disabled={files.length === 0}
-              >
-                Upload
-              </button>
-              <button
-                type="button"
-                className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm"
-                onClick={onClose}
-              >
-                Cancel
-              </button>
+          {/* Add status messages */}
+          {uploadStatus === 'error' && (
+            <div className="mt-3 text-red-500 text-sm flex items-center">
+              <AlertCircle className="h-4 w-4 mr-2" />
+              {error}
             </div>
           )}
+          {uploadStatus === 'success' && (
+            <div className="mt-3 text-green-500 text-sm flex items-center">
+              <CheckCircle className="h-4 w-4 mr-2" />
+              File uploaded successfully!
+            </div>
+          )}
+
+          {/* Action buttons */}
+          <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse gap-2">
+            <button
+              type="button"
+              className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-500 text-base font-medium text-white hover:bg-primary-600 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed`}
+              onClick={handleUpload}
+              disabled={files.length === 0 || isUploading}
+            >
+              {isUploading ? 'Uploading...' : 'Upload'}
+            </button>
+            <button
+              type="button"
+              className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm"
+              onClick={onClose}
+            >
+              Cancel
+            </button>
+          </div>
         </motion.div>
       </div>
     </div>

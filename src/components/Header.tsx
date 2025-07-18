@@ -10,15 +10,15 @@ const Header: React.FC = () => {
     <header className="bg-white dark:bg-gray-900 shadow-lg border-gray-200 dark:border-gray-700 transition-colors duration-200">
       <div className="px-6 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-6">
             <div className=" rounded-lg">
               <img src={socialMedia} alt="Social Media" className="h-6 w-6 text-white" />
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <div className=''>
+              <h1 className="text-xl font-bold text-primary-500 dark:text-white">
                 Social Media Dashboard
               </h1>
-              <p className="text-sm italic text-gray-500 dark:text-gray-400">
+              <p className="text-[12px] italic text-gray-500 dark:text-gray-400">
                 Professional Analytics & Tracking
               </p>
             </div>
