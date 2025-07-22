@@ -14,7 +14,8 @@ export const transformLinkedInMetrics = (tileData: LinkedInMetrics): MetricData[
       value: tileData?.profileViews?.value || 0,
       change: tileData?.profileViews?.change || 0,
       changeType: (tileData?.profileViews?.change || 0) >= 0 ? 'increase' : 'decrease',
-      icon: view
+      icon: view,
+      gradient: 'bg-gradient-to-br from-pink-500 to-rose-600'
     },
     {
       id: 'post_reach',
@@ -22,7 +23,8 @@ export const transformLinkedInMetrics = (tileData: LinkedInMetrics): MetricData[
       value: tileData?.postReach?.value || 0,
       change: tileData?.postReach?.change || 0,
       changeType: (tileData?.postReach?.change || 0) >= 0 ? 'increase' : 'decrease',
-      icon: shareIcon
+      icon: shareIcon,
+      gradient: 'bg-gradient-to-br from-purple-500 to-indigo-600'
     },
     {
       id: 'post_likes',
@@ -30,7 +32,8 @@ export const transformLinkedInMetrics = (tileData: LinkedInMetrics): MetricData[
       value: tileData?.postLikes?.value || 0,
       change: tileData?.postLikes?.change || 0,
       changeType: (tileData?.postLikes?.change || 0) >= 0 ? 'increase' : 'decrease',
-      icon: likeIcon
+      icon: likeIcon,
+      gradient: 'bg-gradient-to-br from-blue-500 to-cyan-600'
     },
     {
       id: 'engagement_rate',
@@ -38,7 +41,8 @@ export const transformLinkedInMetrics = (tileData: LinkedInMetrics): MetricData[
       value: `${(tileData?.engagementRate?.value || 0).toFixed(2)}%`,
       change: tileData?.engagementRate?.change || 0,
       changeType: (tileData?.engagementRate?.change || 0) >= 0 ? 'increase' : 'decrease',
-      icon: engagement
+      icon: engagement,
+      gradient: 'bg-gradient-to-br from-orange-500 to-amber-600'
     },
     {
       id: 'ctr',
@@ -46,7 +50,8 @@ export const transformLinkedInMetrics = (tileData: LinkedInMetrics): MetricData[
       value: `${(tileData?.clickThroughRate?.value || 0).toFixed(2)}%`,
       change: tileData?.clickThroughRate?.change || 0,
       changeType: (tileData?.clickThroughRate?.change || 0) >= 0 ? 'increase' : 'decrease',
-      icon: click
+      icon: click,
+      gradient: 'bg-gradient-to-br from-green-500 to-lime-600'
     },
     {
       id: 'top_post',
@@ -54,7 +59,8 @@ export const transformLinkedInMetrics = (tileData: LinkedInMetrics): MetricData[
       value: tileData?.topPerformingPost?.title || 'No posts yet',
       change: tileData?.topPerformingPost?.change || 0,
       changeType: 'neutral',
-      icon: growth
+      icon: growth,
+      gradient: 'bg-gradient-to-br from-red-500 to-pink-600'
     }
   ];
 };

@@ -12,6 +12,7 @@ export interface MetricData {
   change: number;
   changeType: 'increase' | 'decrease' | 'neutral';
   icon: any;
+  gradient: string;
 }
 
 export interface LinkedInMetrics {
