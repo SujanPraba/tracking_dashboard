@@ -60,7 +60,7 @@ const InsightCharts: React.FC<InsightChartsProps> = ({ data }) => {
                 <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-100">
                     <p className="text-sm font-semibold text-gray-800">{payload[0].payload.name}</p>
                     <p className="text-sm text-gray-600 mt-1">
-                        Engagement: {payload[0].payload.percentage}
+                        Engagement: {(payload[0].value * 100).toFixed(2)}%
                     </p>
                 </div>
             );
@@ -68,12 +68,12 @@ const InsightCharts: React.FC<InsightChartsProps> = ({ data }) => {
         return null;
     };
 
-    const CustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name, value }: any) => {
+    const CustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, name, value }: any) => {
         const RADIAN = Math.PI / 180;
         const radius = innerRadius + (outerRadius - innerRadius) * 1.1; // Increased distance
         const x = cx + radius * Math.cos(-midAngle * RADIAN);
         const y = cy + radius * Math.sin(-midAngle * RADIAN);
-        const percentage = `${(percent * 100).toFixed(0)}%`;
+        const engagement = `${(value * 100).toFixed(2)}%`;
 
         return (
             <g>
@@ -85,7 +85,7 @@ const InsightCharts: React.FC<InsightChartsProps> = ({ data }) => {
                     dominantBaseline="central"
                     className="text-xs font-medium"
                 >
-                    {name} ({percentage})
+                    {name} ({engagement})
                 </text>
             </g>
         );
