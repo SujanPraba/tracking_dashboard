@@ -37,11 +37,11 @@ const FilterSection: React.FC<FilterSectionProps> = ({ fileUploadOnSuccess, toas
   };
 
   return (
-    <div className="mb-4 flex justify-between py-0 transition-colors duration-200">
-      <div className="flex items-center gap-2">
+    <div className="mb-4 flex justify-end py-0 transition-colors duration-200">
+      {/* <div className="flex items-center gap-2">
         <img src={linkedinLogo} alt="LinkedIn" className="h-10 w-10" />
         <h2 className="text-lg font-semibold dark:text-white">LinkedIn Analytics</h2>
-      </div>
+      </div> */}
 
       <div className="flex justify-end -mt-2">
         <button

@@ -3,6 +3,7 @@ import FilterSection from './FilterSection';
 import MetricCard from './MetricCard';
 import LoadingSpinner from './LoadingSpinner';
 import ErrorMessage from './ErrorMessage';
+import ProductFilter from './ProductFilter';
 import KeywordChart from './charts/KeywordChart';
 import SentimentChart from './charts/SentimentChart';
 import FrequencyChart from './charts/FrequencyChart';
@@ -23,6 +24,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { getClicksPerPost, getEngagementDataByOverTime, getEngagementDataByPost, getTileData, getWordCloudData } from '../api/dashboardApi';
 import toast, { Toaster } from 'react-hot-toast';
 import loadingUi from "../assets/loader.svg"
+import MediaFilter from './MediaFilter';
+import SearchInput from './SearchInput';
+import DateRangeFilter from './DateRangeFilter';
+import { Upload } from 'lucide-react';
+import FileUploadModal from './FileUploadModal';
+import InsightCharts from './charts/InsightCharts';
+import { getInsights } from '../api/dashboardApi';
+
+interface ApiParams {
+  productType: string;
+  startDate?: string; // Make dates optional
+  endDate?: string;
+}
 
 const Dashboard: React.FC = () => {
   const [filters, setFilters] = useState<DashboardFilters>({
@@ -32,6 +46,7 @@ const Dashboard: React.FC = () => {
       end: new Date()
     }
   });
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [wordCloudData, setWordCloudData] = useState<any>([]);
   const [tileData, setTileData] = useState<LinkedInMetrics>({});
   const [engagementDataByPost, setEngagementDataByPost] = useState<any>([]);
@@ -39,8 +54,35 @@ const Dashboard: React.FC = () => {
   const [clicksPerPost, setClicksPerPost] = useState<any>([]);
   const [hashtagPerformance, setHashtagPerformance] = useState<any>([]);
   const [sentimentData, setSentimentData] = useState<any>([]);
-  const { metrics, keywordData, frequencyData, videoEngagementData, loading, error } = useDashboardData(filters);
+  const [insightsData, setInsightsData] = useState<any>(null);
+  const { metrics, keywordData, frequencyData, loading, error } = useDashboardData(filters);
   const [loadingUix, setLoadingUix] = useState<boolean>(false);
+  const [selectedProduct, setSelectedProduct] = useState('pirai-infotech');
+  const [apiParams, setApiParams] = useState<ApiParams>({
+    productType: 'pirai-infotech'
+    // Initialize without dates
+  });
+  const handleFileUpload = async (success: boolean) => {
+    if (success) {
+      fileUploadOnSuccess();
+      toast.success('File uploaded successfully', {
+        duration: 2000,
+      });
+    } else {
+      toast.error('File upload failed', {
+        duration: 2000,
+      });
+    }
+  };
+
+  useEffect(() => {
+    // Update API params when product changes
+    setApiParams(prev => ({
+      ...prev,
+      productType: selectedProduct
+    }));
+  }, [selectedProduct]);
+
   const handleRetry = () => {
     setFilters({ ...filters });
   };
@@ -49,26 +91,90 @@ const Dashboard: React.FC = () => {
     initailCall();
   }, []);
 
-  const initailCall =()=>{
+  const initailCall = () => {
     setLoadingUix(false);
-    getTileData(null,setTileData);
-    getWordCloudData(null, setWordCloudData, setHashtagPerformance, setSentimentData);
-    getEngagementDataByPost(null, setEngagementDataByPost);
-    getEngagementDataByOverTime(null, setEngagementDataByOverTime);
-    getClicksPerPost(null, setClicksPerPost);
+    getTileData(apiParams, setTileData);
+    getWordCloudData(apiParams, setWordCloudData, setHashtagPerformance, setSentimentData);
+    getEngagementDataByPost(apiParams, setEngagementDataByPost);
+    getEngagementDataByOverTime(apiParams, setEngagementDataByOverTime);
+    getClicksPerPost(apiParams, setClicksPerPost);
+    getInsights(apiParams).then(setInsightsData);
   }
 
   // Transform tile data into metrics
   const linkedInMetrics = transformLinkedInMetrics(tileData);
 
 
-  const fileUploadOnSuccess = ()=>{
+  const fileUploadOnSuccess = () => {
     setLoadingUix(true);
-    setTimeout(()=>{
-      initailCall();
+    setTimeout(() => {
+      refreshAllData(apiParams);
+    }, 1500);
+  };
 
-    },1500)
-  }
+  const handleProductChange = (product: any) => {
+    console.log('Selected product:', product);
+    const newProduct = product.id;
+    setSelectedProduct(newProduct);
+
+    // Keep existing dates if any when changing product
+    const newParams = {
+      ...apiParams,
+      productType: newProduct
+    };
+    refreshAllData(newParams);
+  };
+
+  const handleMediaChange = (media: any) => {
+    // Handle media change here
+    console.log('Selected media:', media);
+  };
+
+  const handleSearch = (query: string) => {
+    console.log('Search query:', query);
+  };
+
+  const handleSearchResultSelect = (result: any) => {
+    console.log('Selected result:', result);
+  };
+
+  const handleDateRangeChange = (dates: { start: Date; end: Date }) => {
+    if (dates.start && dates.end) {
+      const newParams = {
+        ...apiParams,
+        startDate: dates.start.toISOString().split('T')[0],
+        endDate: dates.end.toISOString().split('T')[0]
+      };
+      setApiParams(newParams);
+
+      // Refresh all data with new date range
+      refreshAllData(newParams);
+    } else {
+      // If dates are cleared, remove them from params
+      const { startDate, endDate, ...restParams } = apiParams;
+      setApiParams(restParams);
+      refreshAllData(restParams);
+    }
+  };
+
+  const refreshAllData = async (params: ApiParams) => {
+    setLoadingUix(true);
+    try {
+      await Promise.all([
+        getTileData(params, setTileData),
+        getWordCloudData(params, setWordCloudData, setHashtagPerformance, setSentimentData),
+        getEngagementDataByPost(params, setEngagementDataByPost),
+        getEngagementDataByOverTime(params, setEngagementDataByOverTime),
+        getClicksPerPost(params, setClicksPerPost),
+        getInsights(params).then(setInsightsData)
+      ]);
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+      toast.error('Failed to refresh data');
+    } finally {
+      setLoadingUix(false);
+    }
+  };
 
   const renderContent = () => {
     if (loading) return <LoadingSpinner text="Loading dashboard data..." />;
@@ -83,6 +189,7 @@ const Dashboard: React.FC = () => {
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
         >
+
           {filters.platform === 'linkedin' ? (
             <>
               {/* LinkedIn Metrics */}
@@ -91,12 +198,15 @@ const Dashboard: React.FC = () => {
                   <MetricCard key={metric.id} metric={metric as any} />
                 ))}
               </div>
+              {insightsData && (
+                <InsightCharts data={insightsData} />
+              )}
 
               {/* LinkedIn Charts */}
               <div className="grid grid-cols-2 gap-8 mt-8">
-              <KeywordTrendsCharts words={wordCloudData} />
-              {/* <FollowersGrowthChart data={mockLinkedInData.followers} /> */}
-              <HashtagPerformanceChart data={hashtagPerformance} />
+                <KeywordTrendsCharts words={wordCloudData} />
+                {/* <FollowersGrowthChart data={mockLinkedInData.followers} /> */}
+                <HashtagPerformanceChart data={hashtagPerformance} />
 
 
               </div>
@@ -111,9 +221,11 @@ const Dashboard: React.FC = () => {
                 {/* <DemographicsChart data={mockLinkedInData.demographics} /> */}
                 <ClicksPerPostTypeChart data={clicksPerPost} />
                 <LinkedInSentimentChart data={sentimentData} />
-              {/* <VideoEngagementChart data={videoEngagementData} /> */}
+                {/* <VideoEngagementChart data={videoEngagementData} /> */}
 
               </div>
+
+              {/* Add Insights Section */}
 
             </>
           ) : (
@@ -141,14 +253,47 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-    {loadingUix && <div className="fixed inset-0 flex justify-center items-center bg-black/30 backdrop-blur-sm z-50"><img src={loadingUi} alt="loading" className="w-[100px] h-[100px]" /></div>}
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-800 transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-1 py-0 space-y-2">
-        <Toaster/>
-        <FilterSection filters={filters} onFiltersChange={setFilters} fileUploadOnSuccess={fileUploadOnSuccess}  toast={toast}/>
-        {renderContent()}
+      {loadingUix && <div className="fixed inset-0 flex justify-center items-center bg-black/30 backdrop-blur-sm z-50"><img src={loadingUi} alt="loading" className="w-[100px] h-[100px]" /></div>}
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800 transition-colors duration-200">
+        <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center space-x-4">
+            <div className="flex items-center space-x-4 min-w-[500px]">
+              <div className="w-64">
+                <ProductFilter onProductChange={handleProductChange} />
+              </div>
+              <div className="w-64">
+                <MediaFilter onProductChange={handleMediaChange} />
+              </div>
+            </div>
+            <div className="flex items-center space-x-4 ml-auto">
+              <DateRangeFilter onDateChange={handleDateRangeChange} />
+              <SearchInput
+                onSearch={handleSearch}
+                onResultSelect={handleSearchResultSelect}
+                selectedProduct={selectedProduct}
+                apiParams={apiParams}
+              />
+
+            </div>
+            <button
+                onClick={() => setIsUploadModalOpen(true)}
+                className="bg-[#5b8bfb] hover:bg-primary-600 text-white px-4 py-2 rounded-md h-10 transition-colors duration-200 flex items-center justify-center gap-2"
+              >
+                <Upload className="h-5" />
+                Upload
+              </button>
+            <FileUploadModal
+              isOpen={isUploadModalOpen}
+              onClose={() => setIsUploadModalOpen(false)}
+              fileType="excel"
+              onFileUpload={handleFileUpload}
+            />
+          </div>
+          <Toaster />
+          {/* <FilterSection filters={filters} onFiltersChange={setFilters} fileUploadOnSuccess={fileUploadOnSuccess} toast={toast} /> */}
+          {renderContent()}
+        </div>
       </div>
-    </div>
     </>
   );
 };

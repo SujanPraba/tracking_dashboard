@@ -9,6 +9,8 @@ const DASHBOARD_ENDPOINTS = {
     GET_ENGAGEMENT_DATA_BY_POST: `${BASE_URL}/linkedin/charts/engagement-by-post-type`,
     FILE_UPLOAD: `${BASE_URL}/linkedin/upload`,
     GET_CLICKS_PER_POST: `${BASE_URL}/linkedin/charts/clicks-per-post-type`,
-}
+    SEARCH_POSTS: `${BASE_URL}/linkedin/posts/search`,
+    GET_INSIGHTS: `${BASE_URL}/linkedin/suggestions`,
+};
 
 export default DASHBOARD_ENDPOINTS;
