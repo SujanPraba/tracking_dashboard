@@ -70,7 +70,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ metric }) => {
           {icon}
         </div>
         <div className="group relative">
-          <Info className="w-3 h-3 text-black/30 hover:text-black" />
+          <Info className="w-4 h-4 text-white hover:text-black" />
           <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[10px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
             {getMetricDescription(metricId)}
           </div>

@@ -638,7 +638,7 @@ export const KeywordTrendsCharts = ({ words }: { words: any[] | null }) => {
         </h3>
         <div className="group relative">
           <Info className="w-3 h-3  text-black/30 hover:text-black" />
-          <div className="absolute shadow-xl right-0 top-6 w-74 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+          <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
           Shows which hashtags, keywords, or phrases are most associated with high engagement on your posts. Values reflect average engagement rate for posts containing each term.
           </div>
         </div>

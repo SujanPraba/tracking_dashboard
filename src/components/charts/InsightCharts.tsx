@@ -110,7 +110,7 @@ const InsightCharts: React.FC<InsightChartsProps> = ({ data }) => {
 
                     </div>
                     <div className="group relative">
-                        <Info className="w-5 h-5 text-black/30 hover:text-black" />
+                        <Info className="w-4 h-4 text-black/30 hover:text-black" />
                         <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
                         Lists the top posts for the selected period, ranked by a composite score that includes engagement rate, CTR, and how recent they are. These posts had the strongest overall impact.
                         </div>
@@ -155,7 +155,7 @@ const InsightCharts: React.FC<InsightChartsProps> = ({ data }) => {
                         <h3 className="text-lg font-semibold text-gray-800">Top Keywords by Engagement</h3>
                     </div>
                     <div className="group relative">
-                        <Info className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                        <Info className="w-4 h-4 text-gray-400 hover:text-gray-600" />
                         <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white backdrop-blur-sm text-[11px] text-black dark:text-white rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
                             Keywords that drive the highest engagement in your content
                         </div>
@@ -222,7 +222,7 @@ const InsightCharts: React.FC<InsightChartsProps> = ({ data }) => {
                                 <Clock className="w-6 h-6 text-blue-500" />
                             </div>
                             <div className="group relative">
-                                <Info className="w-5 h-5 text-white/70 hover:text-white" />
+                                <Info className="w-4 h-4 text-white/70 hover:text-white" />
                                 <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
                                 Indicates the weekday and hour in Asia/Kolkata time when your posts achieved the highest average engagement. Based on analysis of prior posts’ engagement rates. Helps you optimize posting schedule for your audience.
                                 </div>
@@ -240,7 +240,7 @@ const InsightCharts: React.FC<InsightChartsProps> = ({ data }) => {
                                 <FileType className="w-5 h-5 text-green-500" />
                             </div>
                             <div className="group relative">
-                                <Info className="w-5 h-5 text-white/70 hover:text-white" />
+                                <Info className="w-4 h-4 text-white/70 hover:text-white" />
                                 <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
                                 Identifies which type of post (e.g., “Organic”, “Sponsored”, or custom types) yielded the highest average engagement during the selected timeframe, helping guide content strategy.
                                 </div>
