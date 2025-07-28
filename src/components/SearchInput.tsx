@@ -127,6 +127,11 @@ const SearchInput: React.FC<SearchInputProps> = ({
           type="text"
           value={query}
           onChange={(e) => handleSearch(e.target.value)}
+          onClick={() => {
+            if (results.length > 0) {
+              setIsOpen(true);
+            }
+          }}
           placeholder={`Search posts...`}
           className="w-full md:w-70  h-[46px] px-10 bg-white border border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm font-medium"
         />
