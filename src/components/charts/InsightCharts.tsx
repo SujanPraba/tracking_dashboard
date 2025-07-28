@@ -206,8 +206,8 @@ const InsightCharts: React.FC<InsightChartsProps> = ({ data }) => {
                             </div>
                             {/* <span className="text-sm bg-white/20 px-2 py-1 rounded-full">{change}</span> */}
                         </div>
-                        <h3 className="text-xl font-bold mb-1">{data.bestTimeToPost}</h3>
                         <p className="text-white/80 text-sm">Best Time to Post</p>
+                        <h3 className="text-xl font-bold mb-1">{data.bestTimeToPost}</h3>
                     </div>
                     <div
                         className={`bg-gradient-to-br from-green-500 to-green-300 min-h-40 p-5 rounded-2xl cursor-auto shadow-xl text-white transform hover:scale-105 transition-all duration-300 animate-fade-in-up`}
@@ -220,8 +220,8 @@ const InsightCharts: React.FC<InsightChartsProps> = ({ data }) => {
                             </div>
                             {/* <span className="text-sm bg-white/20 px-2 py-1 rounded-full">{change}</span> */}
                         </div>
-                        <h3 className="text-xl font-bold mb-1">{data.bestPostType}</h3>
                         <p className="text-white/80 text-sm">Best Performing Post Type</p>
+                        <h3 className="text-xl font-bold mb-1">{data.bestPostType}</h3>
                     </div>
 
 

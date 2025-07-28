@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, MessageCircle, MousePointer, TrendingUp, Trophy, Users } from 'lucide-react';
+import { Heart, MessageCircle, MousePointer, TrendingUp, Trophy, Users, Info } from 'lucide-react';
 interface MetricCardProps {
   metric: {
     id: string;
@@ -39,17 +39,42 @@ const MetricCard: React.FC<MetricCardProps> = ({ metric }) => {
     icon: React.ReactNode;
     delay?: number;
     fullValue?: string | number;
+    metricId: string;
   }
-  const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, gradient, icon, delay = 0, fullValue }) => (
+  const getMetricDescription = (id: string) => {
+    switch(id) {
+      case 'profile_views':
+        return 'Number of times your profile was viewed';
+      case 'post_reach':
+        return 'Total number of unique users who saw your posts';
+      case 'post_likes':
+        return 'Total number of likes received on your posts';
+      case 'engagement_rate':
+        return 'Percentage of engaged users relative to reach';
+      case 'ctr':
+        return 'Click-through rate on your posts';
+      case 'top_post':
+        return 'Your best performing post';
+      default:
+        return '';
+    }
+  };
+
+  const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, gradient, icon, delay = 0, fullValue, metricId }) => (
     <div
-      className={`${gradient} min-h-40 p-5 rounded-2xl cursor-auto shadow-xl text-white transform hover:scale-105 transition-all duration-300 animate-fade-in-up`}
+      className={`${gradient} min-h-40 p-5 rounded-2xl cursor-auto shadow-xl text-white transform hover:scale-105 transition-all duration-300 animate-fade-in-up relative`}
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="flex items-center justify-between mb-4">
         <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
           {icon}
         </div>
-        {/* <span className="text-sm bg-white/20 px-2 py-1 rounded-full">{change}</span> */}
+        <div className="group relative">
+          <Info className="w-5 h-5 text-white/70 hover:text-white" />
+          <div className="absolute shadow-xl right-0 top-6 w-48 p-2 bg-white/20 text-[11px] text-white rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+            {getMetricDescription(metricId)}
+          </div>
+        </div>
       </div>
       <h3 className="text-xl font-bold mb-1" title={fullValue?.toString()}>{title === 'post_reach' ? formatValue(value) : value}</h3>
       <p className="text-white/80 text-sm">{title}</p>
@@ -88,6 +113,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ metric }) => {
         icon={renderMetricImage(metric)}
         delay={0}
         fullValue={metric.value}
+        metricId={metric.id}
       />
     </motion.div>
   );
