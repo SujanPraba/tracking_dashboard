@@ -48,7 +48,7 @@ export const EngagementTimeChart = ({ data }: { data: { engagementOverTime: Arra
       </h3>
       <div className="group relative">
         <Info className="w-3 h-3  text-black/30 hover:text-black" />
-        <div className="absolute shadow-xl right-0 top-6 w-74 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+        <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
         Shows how your engagement rate changed day-by-day over the selected period. Each point is the engagement rate for that date, which helps you spot spikes or drops.
         </div>
       </div>
@@ -163,7 +163,7 @@ export const PostTypeEngagementChart = ({ data }: { data: { engagementByPostType
       </h3>
       <div className="group relative">
         <Info className="w-3 h-3  text-black/30 hover:text-black" />
-        <div className="absolute shadow-xl right-0 top-6 w-74 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+        <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
         Compares the average engagement rate of your posts, grouped by type (e.g., “Organic”, “Sponsored”, etc.), for the timeframe. Helps you see which type generates more audience interaction.
         </div>
       </div>
@@ -283,7 +283,7 @@ export const ClicksPerPostTypeChart = ({ data }: { data: { clicksPerPostTypes: A
       </h3>
       <div className="group relative">
         <Info className="w-3 h-3  text-black/30 hover:text-black" />
-        <div className="absolute shadow-xl right-0 top-6 w-74 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+        <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
         Breaks down both total clicks and average click-through rate (CTR) by each post type (e.g., “Organic”, “Sponsored”). Useful for understanding which formats drive traffic.
         </div>
       </div>
@@ -384,7 +384,7 @@ export const SentimentChart = ({ data }: { data: Array<{ date: string; positive:
       </h3>
       <div className="group relative">
         <Info className="w-3 h-3  text-black/30 hover:text-black" />
-        <div className="absolute shadow-xl right-0 top-6 w-74 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+        <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
         Tracks the count of posts each day with positive, negative, or neutral sentiment, as measured by NLP analysis of post content. Helps understand shifts in audience tone or messaging.
         </div>
       </div>
@@ -488,7 +488,7 @@ export const TimeOfDayEngagementChart = ({ data }: { data: any[] }) => (
     </h3>
     <div className="group relative">
         <Info className="w-3 h-3  text-black/30 hover:text-black" />
-        <div className="absolute shadow-xl right-0 top-6 w-74 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+        <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
           Visual representation of time of day engagement
         </div>
     </div>
@@ -561,7 +561,7 @@ export const HashtagPerformanceChart = ({ data }: {
         </h3>
         <div className="group relative">
           <Info className="w-3 h-3 text-black/30 hover:text-white" />
-          <div className="absolute shadow-xl right-0 top-6 w-74 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+          <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
           Ranks hashtags by how often they appeared in your posts during the selected period. Useful for identifying your most used campaign or topic tags.
           </div>
         </div>
