@@ -1,7 +1,7 @@
 import React from 'react';
 import { delay, motion } from 'framer-motion';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { Clock, FileType, Star, Hash } from 'lucide-react';
+import { Clock, FileType, Star, Hash, Info } from 'lucide-react';
 
 interface InsightData {
     topKeywords: Array<{
@@ -101,11 +101,20 @@ const InsightCharts: React.FC<InsightChartsProps> = ({ data }) => {
                 className="bg-alice-blue dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700 lg:col-span-2"
                 style={{ boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)" }}
             >
-                <div className="flex items-center gap-2 mb-4">
-                    <Star className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                    <h3 className="text-[14px] font-[400] text-gray-800 dark:text-white">
-                        Top Performing Posts
-                    </h3>
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                        <Star className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                        <h3 className="text-[14px] font-[400] text-gray-800 dark:text-white">
+                            Top Performing Posts
+                        </h3>
+
+                    </div>
+                    <div className="group relative">
+                        <Info className="w-5 h-5 text-black/30 hover:text-black" />
+                        <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                        Lists the top posts for the selected period, ranked by a composite score that includes engagement rate, CTR, and how recent they are. These posts had the strongest overall impact.
+                        </div>
+                    </div>
                 </div>
                 <div className="space-y-3">
                     {data.mostRelevantPosts.slice(0, 5).map((post, index) => (
@@ -140,9 +149,17 @@ const InsightCharts: React.FC<InsightChartsProps> = ({ data }) => {
                 transition={{ duration: 0.5 }}
                 className="bg-white rounded-xl shadow-lg p-6 border border-gray-200"
             >
-                <div className="flex items-center gap-2 mb-6">
-                    <Hash className="w-5 h-5 text-blue-500" />
-                    <h3 className="text-lg font-semibold text-gray-800">Top Keywords by Engagement</h3>
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-2">
+                        <Hash className="w-5 h-5 text-blue-500" />
+                        <h3 className="text-lg font-semibold text-gray-800">Top Keywords by Engagement</h3>
+                    </div>
+                    <div className="group relative">
+                        <Info className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                        <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white backdrop-blur-sm text-[11px] text-black dark:text-white rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                            Keywords that drive the highest engagement in your content
+                        </div>
+                    </div>
                 </div>
                 <div className="h-[400px] relative pie-chart">
                     <div className="absolute inset-0 flex items-center justify-center">
@@ -204,10 +221,15 @@ const InsightCharts: React.FC<InsightChartsProps> = ({ data }) => {
                             <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
                                 <Clock className="w-6 h-6 text-blue-500" />
                             </div>
-                            {/* <span className="text-sm bg-white/20 px-2 py-1 rounded-full">{change}</span> */}
+                            <div className="group relative">
+                                <Info className="w-5 h-5 text-white/70 hover:text-white" />
+                                <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                                Indicates the weekday and hour in Asia/Kolkata time when your posts achieved the highest average engagement. Based on analysis of prior posts’ engagement rates. Helps you optimize posting schedule for your audience.
+                                </div>
+                            </div>
                         </div>
                         <p className="text-white/80 text-sm">Best Time to Post</p>
-                        <h3 className="text-xl font-bold mb-1">{data.bestTimeToPost}</h3>
+                        <h3 className="text-lg font-bold mb-1">{data.bestTimeToPost}</h3>
                     </div>
                     <div
                         className={`bg-gradient-to-br from-green-500 to-green-300 min-h-40 p-5 rounded-2xl cursor-auto shadow-xl text-white transform hover:scale-105 transition-all duration-300 animate-fade-in-up`}
@@ -215,10 +237,14 @@ const InsightCharts: React.FC<InsightChartsProps> = ({ data }) => {
                     >
                         <div className="flex items-center justify-between mb-4">
                             <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
-                            <FileType className="w-5 h-5 text-green-500" />
-
+                                <FileType className="w-5 h-5 text-green-500" />
                             </div>
-                            {/* <span className="text-sm bg-white/20 px-2 py-1 rounded-full">{change}</span> */}
+                            <div className="group relative">
+                                <Info className="w-5 h-5 text-white/70 hover:text-white" />
+                                <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                                Identifies which type of post (e.g., “Organic”, “Sponsored”, or custom types) yielded the highest average engagement during the selected timeframe, helping guide content strategy.
+                                </div>
+                            </div>
                         </div>
                         <p className="text-white/80 text-sm">Best Performing Post Type</p>
                         <h3 className="text-xl font-bold mb-1">{data.bestPostType}</h3>

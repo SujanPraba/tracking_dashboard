@@ -19,6 +19,7 @@ import {
 import { motion } from 'framer-motion';
 import ReactWordcloud from 'react-wordcloud';
 import loadergif from "../../assets/loader.svg"
+import { Info } from 'lucide-react';
 
 const LoadingState = () => (
   <div className="h-[300px] w-full flex items-center justify-center">
@@ -41,9 +42,17 @@ export const EngagementTimeChart = ({ data }: { data: { engagementOverTime: Arra
       className="bg-alice-blue dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700"
       style={{boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)"}}
     >
+      <div className="flex items-center justify-between mb-4">
       <h3 className="text-[14px] font-[400] text-gray-800 dark:text-white mb-4">
         Engagement Over Time
       </h3>
+      <div className="group relative">
+        <Info className="w-3 h-3  text-black/30 hover:text-black" />
+        <div className="absolute shadow-xl right-0 top-6 w-74 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+        Shows how your engagement rate changed day-by-day over the selected period. Each point is the engagement rate for that date, which helps you spot spikes or drops.
+        </div>
+      </div>
+      </div>
       {!data?.engagementOverTime ? <LoadingState /> : (
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={formattedData}>
@@ -148,9 +157,17 @@ export const PostTypeEngagementChart = ({ data }: { data: { engagementByPostType
       className="bg-alice-blue dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700"
       style={{boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)"}}
     >
+      <div className="flex items-center justify-between mb-4">
       <h3 className="text-[14px] font-[400] text-gray-800 dark:text-white mb-4">
         Engagement by Post Type
       </h3>
+      <div className="group relative">
+        <Info className="w-3 h-3  text-black/30 hover:text-black" />
+        <div className="absolute shadow-xl right-0 top-6 w-74 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+        Compares the average engagement rate of your posts, grouped by type (e.g., “Organic”, “Sponsored”, etc.), for the timeframe. Helps you see which type generates more audience interaction.
+        </div>
+      </div>
+      </div>
       {!data?.engagementByPostTypes ? <LoadingState /> : (
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={formattedData}>
@@ -260,9 +277,17 @@ export const ClicksPerPostTypeChart = ({ data }: { data: { clicksPerPostTypes: A
       className="bg-alice-blue dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700"
       style={{boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)"}}
     >
+      <div className="flex items-center justify-between mb-4">
       <h3 className="text-[14px] font-[400] text-gray-800 dark:text-white mb-4">
         Clicks per Post Type
       </h3>
+      <div className="group relative">
+        <Info className="w-3 h-3  text-black/30 hover:text-black" />
+        <div className="absolute shadow-xl right-0 top-6 w-74 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+        Breaks down both total clicks and average click-through rate (CTR) by each post type (e.g., “Organic”, “Sponsored”). Useful for understanding which formats drive traffic.
+        </div>
+      </div>
+      </div>
       {!data?.clicksPerPostTypes ? <LoadingState /> : (
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={formattedData}>
@@ -353,9 +378,17 @@ export const SentimentChart = ({ data }: { data: Array<{ date: string; positive:
       className="bg-alice-blue dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700"
       style={{boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)"}}
     >
+      <div className="flex items-center justify-between mb-4">
       <h3 className="text-[14px] font-[400] text-gray-800 dark:text-white mb-4">
         Sentiment Analysis Over Time
       </h3>
+      <div className="group relative">
+        <Info className="w-3 h-3  text-black/30 hover:text-black" />
+        <div className="absolute shadow-xl right-0 top-6 w-74 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+        Tracks the count of posts each day with positive, negative, or neutral sentiment, as measured by NLP analysis of post content. Helps understand shifts in audience tone or messaging.
+        </div>
+      </div>
+      </div>
       {!data || data.length === 0 ? <LoadingState /> : (
         <ResponsiveContainer width="100%" height={300}>
           <AreaChart data={formattedData}>
@@ -449,9 +482,17 @@ export const TimeOfDayEngagementChart = ({ data }: { data: any[] }) => (
     transition={{ duration: 0.5 }}
     className="bg-alice-blue dark:bg-periwinkle-100 p-6 rounded-xl shadow-lg"
   >
+    <div className="flex items-center justify-between mb-4">
     <h3 className="text-[14px] font-[400] text-periwinkle-200 dark:text-lavender-400 mb-4">
       Time of Day Engagement
     </h3>
+    <div className="group relative">
+        <Info className="w-3 h-3  text-black/30 hover:text-black" />
+        <div className="absolute shadow-xl right-0 top-6 w-74 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+          Visual representation of time of day engagement
+        </div>
+    </div>
+    </div>
     <ResponsiveContainer width="100%" height={300}>
       <LineChart data={data}>
         <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
@@ -514,9 +555,17 @@ export const HashtagPerformanceChart = ({ data }: {
       className="bg-alice-blue dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700"
       style={{boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)"}}
     >
-      <h3 className="text-[14px] font-[400] text-gray-800 dark:text-white mb-4">
-        Top Performed Hashtags
-      </h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-[14px] font-[400] text-gray-800 dark:text-white">
+          Top Performed Hashtags
+        </h3>
+        <div className="group relative">
+          <Info className="w-3 h-3 text-black/30 hover:text-white" />
+          <div className="absolute shadow-xl right-0 top-6 w-74 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+          Ranks hashtags by how often they appeared in your posts during the selected period. Useful for identifying your most used campaign or topic tags.
+          </div>
+        </div>
+      </div>
       {!data?.hashtagPerformance ? <LoadingState /> : (
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={formattedData} layout="vertical">
@@ -583,9 +632,17 @@ export const KeywordTrendsCharts = ({ words }: { words: any[] | null }) => {
       className="bg-alice-blue dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700"
       style={{boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)"}}
     >
-      <h3 className="text-[14px] font-[400] text-gray-800 dark:text-white mb-4">
-        Keyword Trends
-      </h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-[14px] font-[400] text-gray-800 dark:text-white">
+          Keyword Trends
+        </h3>
+        <div className="group relative">
+          <Info className="w-3 h-3  text-black/30 hover:text-black" />
+          <div className="absolute shadow-xl right-0 top-6 w-74 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+          Shows which hashtags, keywords, or phrases are most associated with high engagement on your posts. Values reflect average engagement rate for posts containing each term.
+          </div>
+        </div>
+      </div>
       {!words || words.length === 0 ? <LoadingState /> : (
         <ResponsiveContainer width="100%" height={300}>
           <ReactWordcloud

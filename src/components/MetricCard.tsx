@@ -44,17 +44,17 @@ const MetricCard: React.FC<MetricCardProps> = ({ metric }) => {
   const getMetricDescription = (id: string) => {
     switch(id) {
       case 'profile_views':
-        return 'Number of times your profile was viewed';
+        return 'Shows the total number of times your LinkedIn company profile was viewed during the selected period. Summed from all post records.';
       case 'post_reach':
-        return 'Total number of unique users who saw your posts';
+        return 'Displays the total number of times your posts appeared in users’ feeds (“impressions total”) over the chosen period, including both organic and sponsored posts.';
       case 'post_likes':
-        return 'Total number of likes received on your posts';
+        return 'Aggregates all likes your posts received in the selected date range. Helps you gauge audience approval.';
       case 'engagement_rate':
-        return 'Percentage of engaged users relative to reach';
+        return 'Shows the average engagement rate across all your posts or campaigns for the selected period. Calculated as the average engagement rate total per metrics row, usually based on likes, comments, and clicks relative to impressions.';
       case 'ctr':
-        return 'Click-through rate on your posts';
+        return 'Displays the average percentage of users who clicked on your posts after seeing them. Computed as the mean CTR across all posts in the selected timeframe.';
       case 'top_post':
-        return 'Your best performing post';
+        return 'Highlights the post with the highest engagement rate during the selected period, helping you identify what content worked best. Engagement rate factors in both interactions and impressions.';
       default:
         return '';
     }
@@ -70,8 +70,8 @@ const MetricCard: React.FC<MetricCardProps> = ({ metric }) => {
           {icon}
         </div>
         <div className="group relative">
-          <Info className="w-5 h-5 text-white/70 hover:text-white" />
-          <div className="absolute shadow-xl right-0 top-6 w-48 p-2 bg-white/20 text-[11px] text-white rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+          <Info className="w-3 h-3 text-black/30 hover:text-black" />
+          <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[10px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
             {getMetricDescription(metricId)}
           </div>
         </div>

@@ -114,7 +114,6 @@ const Dashboard: React.FC = () => {
   };
 
   const handleProductChange = (product: any) => {
-    console.log('Selected product:', product);
     const newProduct = product.id;
     setSelectedProduct(newProduct);
 
@@ -140,7 +139,7 @@ const Dashboard: React.FC = () => {
       // Refresh dashboard data with selected posts
       const newParams = {
         ...apiParams,
-        selectedPosts
+        postIds: selectedPosts
       };
       refreshAllData(newParams);
     } catch (error) {
