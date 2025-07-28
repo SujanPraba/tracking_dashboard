@@ -1,4 +1,4 @@
-export const BASE_URL = "http://10.10.11.39:3002/api";
+export const BASE_URL = "http://10.10.11.73:3002/api";
 
 
 const DASHBOARD_ENDPOINTS = {

@@ -51,13 +51,14 @@ export const EngagementTimeChart = ({ data }: { data: { engagementOverTime: Arra
             <XAxis
               dataKey="date"
               stroke="#718096"
-              fontSize={8}
+              fontSize={10}
               tickLine={false}
               axisLine={false}
-              angle={-90}
+              angle={-45}
               textAnchor="end"
-              // height={50}
-              // interval={30}
+              height={80}
+              interval={0}
+              dy={20}
             />
             <YAxis
               stroke="#718096"
@@ -362,13 +363,14 @@ export const SentimentChart = ({ data }: { data: Array<{ date: string; positive:
             <XAxis
               dataKey="date"
               stroke="#718096"
-              fontSize={8}
+              fontSize={10}
               tickLine={false}
               axisLine={false}
               angle={-45}
               textAnchor="end"
-              height={60}
+              height={80}
               interval={0}
+              dy={20}
             />
             <YAxis
               stroke="#718096"

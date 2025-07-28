@@ -128,7 +128,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
           value={query}
           onChange={(e) => handleSearch(e.target.value)}
           placeholder={`Search posts...`}
-          className="w-full md:w-80  h-[46px] px-10 bg-white border border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm font-medium"
+          className="w-full md:w-70  h-[46px] px-10 bg-white border border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm font-medium"
         />
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
         {query && (

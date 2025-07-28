@@ -38,8 +38,9 @@ const MetricCard: React.FC<MetricCardProps> = ({ metric }) => {
     gradient: string;
     icon: React.ReactNode;
     delay?: number;
+    fullValue?: string | number;
   }
-  const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, gradient, icon, delay = 0 }) => (
+  const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, gradient, icon, delay = 0, fullValue }) => (
     <div
       className={`${gradient} min-h-40 p-5 rounded-2xl cursor-auto shadow-xl text-white transform hover:scale-105 transition-all duration-300 animate-fade-in-up`}
       style={{ animationDelay: `${delay}ms` }}
@@ -50,7 +51,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ metric }) => {
         </div>
         {/* <span className="text-sm bg-white/20 px-2 py-1 rounded-full">{change}</span> */}
       </div>
-      <h3 className="text-xl font-bold mb-1">{title === 'post_reach' ? formatValue(value) : value}</h3>
+      <h3 className="text-xl font-bold mb-1" title={fullValue?.toString()}>{title === 'post_reach' ? formatValue(value) : value}</h3>
       <p className="text-white/80 text-sm">{title}</p>
     </div>
   );
@@ -86,6 +87,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ metric }) => {
         gradient={metric.gradient}
         icon={renderMetricImage(metric)}
         delay={0}
+        fullValue={metric.value}
       />
     </motion.div>
   );

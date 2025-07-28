@@ -75,7 +75,7 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({ onDateChange }) => {
   };
 
   const formatDateRange = () => {
-    if (!selectedStartDate) return currentDate.toLocaleDateString('en-GB');
+    if (!selectedStartDate) return 'Select Date Range';
     if (!selectedEndDate) return selectedStartDate.toLocaleDateString('en-GB');
     return `${selectedStartDate.toLocaleDateString('en-GB')} - ${selectedEndDate.toLocaleDateString('en-GB')}`;
   };
@@ -123,10 +123,10 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({ onDateChange }) => {
     <div className="relative" ref={filterRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full bg-white h-[46px] px-4 rounded-lg shadow-sm border border-gray-200 flex items-center space-x-2 hover:border-gray-300 transition-all duration-200"
+        className={`w-full bg-white h-[46px] px-4 rounded-lg shadow-sm border border-gray-200 flex items-center space-x-2 hover:border-gray-300 transition-all duration-200 ${!selectedStartDate ? 'text-gray-400' : ''}`}
       >
-        <CalendarIcon className="w-5 h-5 text-gray-500" />
-        <span className="text-sm text-gray-700 font-medium">{formatDateRange()}</span>
+        <CalendarIcon className={`w-5 h-5 ${!selectedStartDate ? 'text-gray-400' : 'text-gray-500'}`} />
+        <span className={`text-sm font-medium ${!selectedStartDate ? 'text-gray-400' : 'text-gray-700'}`}>{formatDateRange()}</span>
       </button>
 
       <AnimatePresence>

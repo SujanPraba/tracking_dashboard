@@ -36,6 +36,7 @@ interface ApiParams {
   productType: string;
   startDate?: string; // Make dates optional
   endDate?: string;
+  selectedPosts?: string[]; // Add selected posts
 }
 
 const Dashboard: React.FC = () => {
@@ -134,8 +135,18 @@ const Dashboard: React.FC = () => {
     console.log('Search query:', query);
   };
 
-  const handleSearchResultSelect = (result: any) => {
-    console.log('Selected result:', result);
+  const handleSearchResultSelect = async (selectedPosts: string[]) => {
+    try {
+      // Refresh dashboard data with selected posts
+      const newParams = {
+        ...apiParams,
+        selectedPosts
+      };
+      refreshAllData(newParams);
+    } catch (error) {
+      console.error('Error handling selected posts:', error);
+      toast.error('Failed to update dashboard with selected posts');
+    }
   };
 
   const handleDateRangeChange = (dates: { start: Date; end: Date }) => {
@@ -257,11 +268,11 @@ const Dashboard: React.FC = () => {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-800 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
           <div className="flex flex-col md:flex-row md:items-center space-x-4">
-            <div className="flex items-center space-x-4 min-w-[500px]">
-              <div className="w-64">
+            <div className="flex items-center space-x-4 min-w-[400px]">
+              <div className="w-60">
                 <ProductFilter onProductChange={handleProductChange} />
               </div>
-              <div className="w-64">
+              <div className="w-60">
                 <MediaFilter onProductChange={handleMediaChange} />
               </div>
             </div>
@@ -273,7 +284,6 @@ const Dashboard: React.FC = () => {
                 selectedProduct={selectedProduct}
                 apiParams={apiParams}
               />
-
             </div>
             <button
                 onClick={() => setIsUploadModalOpen(true)}
