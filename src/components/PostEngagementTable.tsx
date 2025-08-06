@@ -15,27 +15,31 @@ interface Post {
 interface PostEngagementTableProps {
   data: Post[];
   itemsPerPage?: number;
+  currentPage: number;
+  setCurrentPage: (value: number | ((prevPage: number) => number)) => void;
+  totalPosts: number;
 }
 
-const PostEngagementTable: React.FC<PostEngagementTableProps> = ({ data, itemsPerPage = 10 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+const PostEngagementTable: React.FC<PostEngagementTableProps> = ({
+  data,
+  itemsPerPage = 10,
+  currentPage,
+  setCurrentPage,
+  totalPosts
+}) => {
   const [sortField, setSortField] = useState<keyof Post>('impressions');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
-  // Calculate pagination
-  const totalPages = Math.ceil(data.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
+  // Calculate total pages
+  const totalPages = Math.ceil(totalPosts / itemsPerPage);
 
-  // Sort and paginate data
+  // Sort data
   const sortedData = [...data].sort((a, b) => {
     if (sortDirection === 'asc') {
       return a[sortField] > b[sortField] ? 1 : -1;
     }
     return a[sortField] < b[sortField] ? 1 : -1;
   });
-
-  const paginatedData = sortedData.slice(startIndex, endIndex);
 
   // Handle sort
   const handleSort = (field: keyof Post) => {
@@ -56,6 +60,12 @@ const PostEngagementTable: React.FC<PostEngagementTableProps> = ({ data, itemsPe
     );
   };
 
+  // Add truncate function
+  const truncateText = (text: string, maxLength: number = 25) => {
+    if (text.length <= maxLength) return text;
+    return `${text.slice(0, maxLength)}...`;
+  };
+
   return (
     <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
       <div className="overflow-x-auto">
@@ -63,7 +73,7 @@ const PostEngagementTable: React.FC<PostEngagementTableProps> = ({ data, itemsPe
           <thead>
             <tr className="bg-gray-50 dark:bg-gray-800">
               <th
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer max-w-[250px]"
                 onClick={() => handleSort('title')}
               >
                 Post title {renderSortIcon('title')}
@@ -107,10 +117,12 @@ const PostEngagementTable: React.FC<PostEngagementTableProps> = ({ data, itemsPe
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-            {paginatedData.map((post) => (
+            {sortedData.map((post) => (
               <tr key={post.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
-                  {post.title}
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300 max-w-[250px]">
+                  <div className="truncate" title={post.title}>
+                    {truncateText(post.title)}
+                  </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
                   {post.postType}

@@ -116,3 +116,26 @@ export const getPostEngagementTable = async (params?: ApiParams, setTableData?: 
     }
     return response;
 };
+
+export const getTableData = async (params?: ApiParams, setTableData?: any , currentPage: number = 1, pageSize: number = 10, setTotalPages?: any) => {
+    const payload = {
+        ...params,
+        startDate: params?.startDate ? new Date(params?.startDate).toISOString() : undefined,
+        endDate: params?.endDate ? new Date(params?.endDate).toISOString() : undefined,
+        offset: (currentPage - 1),
+        limit: pageSize,
+    }
+    const response = await apiCall({
+        endpoint: DASHBOARD_ENDPOINTS.GET_TABLE_DATA,
+        method: "POST",
+        data: payload,
+    });
+    console.log(response);
+    if(response){
+        setTableData(response?.posts);
+        setTotalPages(response?.totalPosts);
+    }else{
+        setTableData([]);
+    }
+    return response;
+};

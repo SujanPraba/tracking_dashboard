@@ -38,9 +38,9 @@ export const transformLinkedInMetrics = (tileData: LinkedInMetrics): MetricData[
     {
       id: 'repost',
       title: 'Repost',
-      value: `${(tileData?.clickThroughRate?.value || 0).toFixed(2)}%`,
-      change: tileData?.clickThroughRate?.change || 0,
-      changeType: (tileData?.clickThroughRate?.change || 0) >= 0 ? 'increase' : 'decrease',
+      value: tileData?.repost?.value || 0,
+      change: tileData?.repost?.change || 0,
+      changeType: 'neutral',
       icon: click,
       gradient: 'bg-gradient-to-br from-lime-500 to-green-600' // unique
     },

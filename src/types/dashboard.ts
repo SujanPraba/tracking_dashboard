@@ -52,6 +52,10 @@ export interface LinkedInMetrics {
     value: number;
     change: number;
   };
+  repost?: {
+    value: number;
+    change: number;
+  };
 }
 
 export interface ChartDataPoint {

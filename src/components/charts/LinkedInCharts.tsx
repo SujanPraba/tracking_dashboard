@@ -41,10 +41,47 @@ export const EngagementTimeChart = ({ data, selectedMetric, setSelectedMetric }:
     { id: 'engagement', label: 'Engagement rate' }
   ];
 
+  const formatValue = (item: any, metric: string) => {
+    switch(metric) {
+      case 'engagement':
+        return parseFloat(item.engagementRate) * 100;
+      case 'impressions':
+        return item.impressions;
+      case 'clicks':
+        return item.clicks;
+      case 'reactions':
+        return item.likes;
+      case 'comments':
+        return item.comments;
+      case 'reposts':
+        return item.reposts;
+      default:
+        return 0;
+    }
+  };
+
   const formattedData = data?.engagementOverTime?.map(item => ({
     date: item.date,
-    engagement: parseFloat(item.engagementRate) * 100
+    [selectedMetric]: formatValue(item, selectedMetric)
   })) || [];
+
+  // Update YAxis formatter based on metric type
+  const getYAxisFormatter = (metric: string) => {
+    return (value: number): string => {
+      switch(metric) {
+        case 'engagement':
+          return `${value.toFixed(2)}%`;
+        case 'impressions':
+        case 'clicks':
+        case 'reactions':
+        case 'comments':
+        case 'reposts':
+          return value.toLocaleString();
+        default:
+          return value.toString();
+      }
+    };
+  };
 
   return (
     <motion.div
@@ -140,7 +177,7 @@ export const EngagementTimeChart = ({ data, selectedMetric, setSelectedMetric }:
               fontSize={8}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(value) => `${value.toFixed(2)}%`}
+              tickFormatter={getYAxisFormatter(selectedMetric)}
             />
             <Tooltip
               contentStyle={{
@@ -150,7 +187,12 @@ export const EngagementTimeChart = ({ data, selectedMetric, setSelectedMetric }:
                 fontSize: '10px',
                 fontWeight: 'normal'
               }}
-              formatter={(value: number) => [`${value.toFixed(2)}%`, metrics.find(m => m.id === selectedMetric)?.label]}
+              formatter={(value: number) => [
+                selectedMetric === 'engagement'
+                  ? `${value.toFixed(2)}%`
+                  : value.toLocaleString(),
+                metrics.find(m => m.id === selectedMetric)?.label
+              ]}
             />
             <Legend
               fontSize={6}

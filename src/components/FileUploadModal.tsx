@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Upload, CheckCircle, AlertCircle, Trash2 } from 'lucide-react';
+import { BASE_URL } from '../api/endPoints';
 
 interface FileUploadModalProps {
   isOpen: boolean;
@@ -57,14 +58,14 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({
       // Upload all files in parallel
       const uploadPromises = selectedFiles.map(async (fileStatus, index) => {
         const formData = new FormData();
-        formData.append('file', fileStatus.file);
+        formData.append('files', fileStatus.file);
 
         try {
           setSelectedFiles(prev => prev.map((f, i) =>
             i === index ? { ...f, status: 'uploading' } : f
           ));
 
-          const response = await fetch('/api/upload', {
+          const response = await fetch(`${BASE_URL}/linkedin/upload`, {
             method: 'POST',
             body: formData,
           });

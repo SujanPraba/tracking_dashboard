@@ -1,4 +1,4 @@
-export const BASE_URL = "http://10.10.11.73:3002/api";
+export const BASE_URL = "http://localhost:3002/api";
 
 
 const DASHBOARD_ENDPOINTS = {
@@ -12,6 +12,7 @@ const DASHBOARD_ENDPOINTS = {
     SEARCH_POSTS: `${BASE_URL}/linkedin/posts/search`,
     GET_INSIGHTS: `${BASE_URL}/linkedin/suggestions`,
     GET_POST_ENGAGEMENT_TABLE: `${BASE_URL}/linkedin/posts/engagement-table`,
+    GET_TABLE_DATA: `${BASE_URL}/linkedin/content-engagement`,
 };
 
 export default DASHBOARD_ENDPOINTS;

@@ -21,7 +21,7 @@ import { DashboardFilters, LinkedInMetrics } from '../types/dashboard';
 import { transformLinkedInMetrics } from '../utils/transformMetrics';
 import { useDashboardData } from '../hooks/useDashboardData';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getClicksPerPost, getEngagementDataByOverTime, getEngagementDataByPost, getTileData, getWordCloudData } from '../api/dashboardApi';
+import { getClicksPerPost, getEngagementDataByOverTime, getEngagementDataByPost, getTableData, getTileData, getWordCloudData } from '../api/dashboardApi';
 import toast, { Toaster } from 'react-hot-toast';
 import loadingUi from "../assets/loader.svg"
 import MediaFilter from './MediaFilter';
@@ -66,8 +66,9 @@ const Dashboard: React.FC = () => {
     productType: 'pirai-infotech'
     // Initialize without dates
   });
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedMetric, setSelectedMetric] = useState('engagement');
-
+  const [totalPosts, setTotalPosts] = useState(0);
   const handleFileUpload = async (success: boolean) => {
     if (success) {
       fileUploadOnSuccess();
@@ -120,6 +121,7 @@ const Dashboard: React.FC = () => {
     getClicksPerPost(apiParams, setClicksPerPost);
     getInsights(apiParams).then(setInsightsData);
     getPostEngagementTable(apiParams, setTableData);
+    getTableData(apiParams, setTableData, 1, 10, setTotalPosts);
   }
 
   // Transform tile data into metrics
@@ -186,6 +188,9 @@ const Dashboard: React.FC = () => {
       refreshAllData(restParams);
     }
   };
+  useEffect(() => {
+    getTableData(apiParams, setTableData, currentPage, 10, setTotalPosts);
+  }, [currentPage]);
 
   const refreshAllData = async (params: ApiParams) => {
     setLoadingUix(true);
@@ -329,7 +334,7 @@ const Dashboard: React.FC = () => {
           {/* <FilterSection filters={filters} onFiltersChange={setFilters} fileUploadOnSuccess={fileUploadOnSuccess} toast={toast} /> */}
           {renderContent()}
           <div className="mt-8">
-            <PostEngagementTable data={tableData} />
+            <PostEngagementTable data={tableData} currentPage={currentPage} setCurrentPage={setCurrentPage} totalPosts={totalPosts} />
           </div>
         </div>
       </div>
