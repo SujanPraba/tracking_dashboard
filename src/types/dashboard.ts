@@ -40,6 +40,18 @@ export interface LinkedInMetrics {
     title: string;
     change: number;
   };
+  impressions?: {
+    value: number;
+    change: number;
+  };
+  reactions?: {
+    value: number;
+    change: number;
+  };
+  comments?: {
+    value: number;
+    change: number;
+  };
 }
 
 export interface ChartDataPoint {

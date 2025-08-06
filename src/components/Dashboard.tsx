@@ -31,6 +31,8 @@ import { Upload } from 'lucide-react';
 import FileUploadModal from './FileUploadModal';
 import InsightCharts from './charts/InsightCharts';
 import { getInsights } from '../api/dashboardApi';
+import PostEngagementTable from './PostEngagementTable';
+import { getPostEngagementTable } from '../api/dashboardApi';
 
 interface ApiParams {
   productType: string;
@@ -56,6 +58,7 @@ const Dashboard: React.FC = () => {
   const [hashtagPerformance, setHashtagPerformance] = useState<any>([]);
   const [sentimentData, setSentimentData] = useState<any>([]);
   const [insightsData, setInsightsData] = useState<any>(null);
+  const [tableData, setTableData] = useState([]);
   const { metrics, keywordData, frequencyData, loading, error } = useDashboardData(filters);
   const [loadingUix, setLoadingUix] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState('pirai-infotech');
@@ -63,6 +66,8 @@ const Dashboard: React.FC = () => {
     productType: 'pirai-infotech'
     // Initialize without dates
   });
+  const [selectedMetric, setSelectedMetric] = useState('engagement');
+
   const handleFileUpload = async (success: boolean) => {
     if (success) {
       fileUploadOnSuccess();
@@ -84,6 +89,20 @@ const Dashboard: React.FC = () => {
     }));
   }, [selectedProduct]);
 
+  // Add new useEffect for selectedMetric changes
+  useEffect(() => {
+    if (apiParams.productType) {  // Only call if we have a product selected
+      setLoadingUix(true);
+      getEngagementDataByOverTime(apiParams, setEngagementDataByOverTime, selectedMetric)
+        .then(() => setLoadingUix(false))
+        .catch((error) => {
+          console.error('Error fetching engagement data:', error);
+          toast.error('Failed to update engagement data');
+          setLoadingUix(false);
+        });
+    }
+  }, [selectedMetric]);
+
   const handleRetry = () => {
     setFilters({ ...filters });
   };
@@ -97,9 +116,10 @@ const Dashboard: React.FC = () => {
     getTileData(apiParams, setTileData);
     getWordCloudData(apiParams, setWordCloudData, setHashtagPerformance, setSentimentData);
     getEngagementDataByPost(apiParams, setEngagementDataByPost);
-    getEngagementDataByOverTime(apiParams, setEngagementDataByOverTime);
+    getEngagementDataByOverTime(apiParams, setEngagementDataByOverTime, selectedMetric);
     getClicksPerPost(apiParams, setClicksPerPost);
     getInsights(apiParams).then(setInsightsData);
+    getPostEngagementTable(apiParams, setTableData);
   }
 
   // Transform tile data into metrics
@@ -174,9 +194,10 @@ const Dashboard: React.FC = () => {
         getTileData(params, setTileData),
         getWordCloudData(params, setWordCloudData, setHashtagPerformance, setSentimentData),
         getEngagementDataByPost(params, setEngagementDataByPost),
-        getEngagementDataByOverTime(params, setEngagementDataByOverTime),
+        getEngagementDataByOverTime(params, setEngagementDataByOverTime, selectedMetric),
         getClicksPerPost(params, setClicksPerPost),
-        getInsights(params).then(setInsightsData)
+        getInsights(params).then(setInsightsData),
+        getPostEngagementTable(params, setTableData)
       ]);
     } catch (error) {
       console.error('Error refreshing data:', error);
@@ -203,7 +224,7 @@ const Dashboard: React.FC = () => {
           {filters.platform === 'linkedin' ? (
             <>
               {/* LinkedIn Metrics */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {linkedInMetrics.map(metric => (
                   <MetricCard key={metric.id} metric={metric as any} />
                 ))}
@@ -221,7 +242,11 @@ const Dashboard: React.FC = () => {
 
               </div>
               <div className="grid grid-cols-1 gap-8 mt-8">
-                <EngagementTimeChart data={engagementDataByOverTime} />
+                <EngagementTimeChart
+                  data={engagementDataByOverTime}
+                  selectedMetric={selectedMetric}
+                  setSelectedMetric={setSelectedMetric}
+                />
               </div>
               {/* <div className="grid grid-cols-1 gap-8 mt-8">
               <TimeOfDayEngagementChart data={mockLinkedInData.timeOfDay} />
@@ -264,7 +289,7 @@ const Dashboard: React.FC = () => {
   return (
     <>
       {loadingUix && <div className="fixed inset-0 flex justify-center items-center bg-black/30 backdrop-blur-sm z-50"><img src={loadingUi} alt="loading" className="w-[100px] h-[100px]" /></div>}
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-800 transition-colors duration-200">
+      <div className="min-h-screen dark:bg-gray-800 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
           <div className="flex flex-col md:flex-row md:items-center space-x-4">
             <div className="flex items-center space-x-4 min-w-[400px]">
@@ -275,7 +300,7 @@ const Dashboard: React.FC = () => {
                 <MediaFilter onProductChange={handleMediaChange} />
               </div>
             </div>
-            <div className="flex items-center space-x-4 ml-auto">
+            <div className="flex items-center space-x-4 mx-auto">
               <DateRangeFilter onDateChange={handleDateRangeChange} />
               <SearchInput
                 onSearch={handleSearch}
@@ -284,6 +309,7 @@ const Dashboard: React.FC = () => {
                 apiParams={apiParams}
               />
             </div>
+            <div className="flex items-center justify-end space-x-4 mx-auto">
             <button
                 onClick={() => setIsUploadModalOpen(true)}
                 className="bg-[#5b8bfb] hover:bg-primary-600 text-white px-4 py-2 rounded-md h-10 transition-colors duration-200 flex items-center justify-center gap-2"
@@ -291,6 +317,7 @@ const Dashboard: React.FC = () => {
                 <Upload className="h-5" />
                 Upload
               </button>
+            </div>
             <FileUploadModal
               isOpen={isUploadModalOpen}
               onClose={() => setIsUploadModalOpen(false)}
@@ -301,6 +328,9 @@ const Dashboard: React.FC = () => {
           <Toaster />
           {/* <FilterSection filters={filters} onFiltersChange={setFilters} fileUploadOnSuccess={fileUploadOnSuccess} toast={toast} /> */}
           {renderContent()}
+          <div className="mt-8">
+            <PostEngagementTable data={tableData} />
+          </div>
         </div>
       </div>
     </>

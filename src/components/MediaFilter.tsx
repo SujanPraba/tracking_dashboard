@@ -5,6 +5,7 @@ import linkedin from '../assets/linkdln.svg';
 import x from '../assets/x.svg';
 import instagram from '../assets/insta.svg';
 import youtube from '../assets/you.svg';
+import facebook from '../assets/fb.svg';
 
 interface Product {
   id: string;
@@ -23,6 +24,11 @@ const products: Product[] = [
     image: linkedin
   },
   {
+    id: 'facebook',
+    name: 'Facebook',
+    image: facebook
+  },
+  {
     id: 'x',
     name: 'X',
     image: x
@@ -36,7 +42,7 @@ const products: Product[] = [
     id: 'youtube',
     name: 'Youtube',
     image: youtube
-  },
+  }
 ];
 
 const MediaFilter: React.FC<ProductFilterProps> = ({ onProductChange }) => {

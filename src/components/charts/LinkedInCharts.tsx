@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AreaChart,
   Area,
@@ -19,7 +19,7 @@ import {
 import { motion } from 'framer-motion';
 import ReactWordcloud from 'react-wordcloud';
 import loadergif from "../../assets/loader.svg"
-import { Info } from 'lucide-react';
+import { Info, ChevronDown } from 'lucide-react';
 
 const LoadingState = () => (
   <div className="h-[300px] w-full flex items-center justify-center">
@@ -28,7 +28,19 @@ const LoadingState = () => (
 );
 
 // Engagement Over Time Chart
-export const EngagementTimeChart = ({ data }: { data: { engagementOverTime: Array<{ date: string; engagementRate: string }> } }) => {
+export const EngagementTimeChart = ({ data, selectedMetric, setSelectedMetric }: { data: { engagementOverTime: Array<{ date: string; engagementRate: string }> }, selectedMetric: string, setSelectedMetric: (metric: string) => void }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const metrics = [
+    { id: 'impressions', label: 'Impressions' },
+    { id: 'members_reached', label: 'Members reached' },
+    { id: 'clicks', label: 'Clicks' },
+    { id: 'reactions', label: 'Reactions' },
+    { id: 'comments', label: 'Comments' },
+    { id: 'reposts', label: 'Reposts' },
+    { id: 'engagement', label: 'Engagement rate' }
+  ];
+
   const formattedData = data?.engagementOverTime?.map(item => ({
     date: item.date,
     engagement: parseFloat(item.engagementRate) * 100
@@ -43,15 +55,44 @@ export const EngagementTimeChart = ({ data }: { data: { engagementOverTime: Arra
       style={{boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)"}}
     >
       <div className="flex items-center justify-between mb-4">
-      <h3 className="text-[14px] font-[400] text-gray-800 dark:text-white mb-4">
-        Engagement Over Time
-      </h3>
-      <div className="group relative">
-        <Info className="w-3 h-3  text-black/30 hover:text-black" />
-        <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
-        Shows how your engagement rate changed day-by-day over the selected period. Each point is the engagement rate for that date, which helps you spot spikes or drops.
+        <div className="flex items-center gap-4">
+          <h3 className="text-[14px] font-[400] text-gray-800 dark:text-white">
+            Engagement Over Time
+          </h3>
+          <div className="relative">
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="flex items-center gap-2 px-3 py-1 text-sm text-gray-600 bg-white rounded-md border border-gray-200 hover:bg-gray-50"
+            >
+              {metrics.find(m => m.id === selectedMetric)?.label}
+              <ChevronDown className="w-4 h-4" />
+            </button>
+            {isDropdownOpen && (
+              <div className="absolute top-full mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+                {metrics.map(metric => (
+                  <button
+                    key={metric.id}
+                    onClick={() => {
+                      setSelectedMetric(metric.id);
+                      setIsDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
+                      selectedMetric === metric.id ? 'text-blue-600 bg-blue-50' : 'text-gray-700'
+                    }`}
+                  >
+                    {metric.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+        <div className="group relative">
+          <Info className="w-3 h-3 text-black/30 hover:text-black" />
+          <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[11px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+            Shows how your engagement rate changed day-by-day over the selected period. Each point is the engagement rate for that date, which helps you spot spikes or drops.
+          </div>
+        </div>
       </div>
       {!data?.engagementOverTime ? <LoadingState /> : (
         <ResponsiveContainer width="100%" height={300}>
@@ -66,8 +107,33 @@ export const EngagementTimeChart = ({ data }: { data: { engagementOverTime: Arra
               angle={-45}
               textAnchor="end"
               height={80}
-              interval={0}
+              interval="preserveStartEnd"
+              minTickGap={50}
               dy={20}
+              tick={(props) => {
+                const { x, y, payload } = props;
+                // Format date to be more concise
+                const date = new Date(payload.value);
+                const formattedDate = date.toLocaleDateString('en-GB', {
+                  day: 'numeric',
+                  month: 'short'
+                });
+                return (
+                  <g transform={`translate(${x},${y})`}>
+                    <text
+                      x={0}
+                      y={0}
+                      dy={16}
+                      textAnchor="end"
+                      fill="#718096"
+                      transform="rotate(-45)"
+                      fontSize={10}
+                    >
+                      {formattedDate}
+                    </text>
+                  </g>
+                );
+              }}
             />
             <YAxis
               stroke="#718096"
@@ -84,21 +150,21 @@ export const EngagementTimeChart = ({ data }: { data: { engagementOverTime: Arra
                 fontSize: '10px',
                 fontWeight: 'normal'
               }}
-              formatter={(value: number) => [`${value.toFixed(2)}%`, 'Engagement Rate']}
+              formatter={(value: number) => [`${value.toFixed(2)}%`, metrics.find(m => m.id === selectedMetric)?.label]}
             />
             <Legend
               fontSize={6}
               verticalAlign="top"
               height={36}
-              formatter={(value) => <span style={{ color: '#8BA3FB', fontSize: '10px', fontWeight: '300' }}>{value}</span>}
+              formatter={(value) => <span style={{ color: '#8BA3FB', fontSize: '10px', fontWeight: '300' }}>{metrics.find(m => m.id === selectedMetric)?.label}</span>}
             />
             <Line
               type="monotone"
-              dataKey="engagement"
+              dataKey={selectedMetric}
               stroke="#8BA3FB"
               strokeWidth={2}
               dot={{ fill: '#8BA3FB', r: 1 }}
-              name="Engagement Rate"
+              name={selectedMetric}
             />
           </LineChart>
         </ResponsiveContainer>

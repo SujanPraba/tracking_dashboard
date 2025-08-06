@@ -5,6 +5,7 @@ interface ApiParams {
     productType: string;
     startDate?: string;  // Make dates optional
     endDate?: string;
+    selectedMetric?: string;
 }
 
 export const getDashboardData = async (params?: ApiParams) => {
@@ -65,11 +66,11 @@ export const getEngagementDataByPost = async (params?: ApiParams, setEngagementD
     return response;
 }
 
-export const getEngagementDataByOverTime = async (params?: ApiParams, setEngagementDataByOverTime?: any) => {
+export const getEngagementDataByOverTime = async (params?: ApiParams, setEngagementDataByOverTime?: any, selectedMetric: string = 'engagement') => {
     const response = await apiCall({
         endpoint: DASHBOARD_ENDPOINTS.GET_ENGAGEMENT_DATA,
         method: "POST",
-        data: params,
+        data: { ...params, selectedMetric },
     });
     if(response){
         setEngagementDataByOverTime(response);
@@ -77,7 +78,7 @@ export const getEngagementDataByOverTime = async (params?: ApiParams, setEngagem
         setEngagementDataByOverTime(null);
     }
     return response;
-}
+};
 
 export const getClicksPerPost = async (params?: ApiParams, setClicksPerPost?: any) => {
     const response = await apiCall({
@@ -99,5 +100,19 @@ export const getInsights = async (params?: ApiParams) => {
         method: "POST",
         data: params,
     });
+    return response;
+};
+
+export const getPostEngagementTable = async (params?: ApiParams, setTableData?: any) => {
+    const response = await apiCall({
+        endpoint: DASHBOARD_ENDPOINTS.GET_POST_ENGAGEMENT_TABLE,
+        method: "POST",
+        data: params,
+    });
+    if(response){
+        setTableData(response);
+    }else{
+        setTableData([]);
+    }
     return response;
 };

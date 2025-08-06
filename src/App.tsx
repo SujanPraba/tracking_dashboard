@@ -21,10 +21,10 @@ function App() {
     <ThemeProvider>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-800 transition-colors duration-200">
         <div className="flex">
-          <Sidebar
+          {/* <Sidebar
             activeSection={activeSection}
             onSectionChange={setActiveSection}
-          />
+          /> */}
           <div className="flex-1 lg:ml-0">
             <Header />
             <main className="p-6 max-h-[90vh] overflow-y-auto">

@@ -11,6 +11,7 @@ const DASHBOARD_ENDPOINTS = {
     GET_CLICKS_PER_POST: `${BASE_URL}/linkedin/charts/clicks-per-post-type`,
     SEARCH_POSTS: `${BASE_URL}/linkedin/posts/search`,
     GET_INSIGHTS: `${BASE_URL}/linkedin/suggestions`,
+    GET_POST_ENGAGEMENT_TABLE: `${BASE_URL}/linkedin/posts/engagement-table`,
 };
 
 export default DASHBOARD_ENDPOINTS;

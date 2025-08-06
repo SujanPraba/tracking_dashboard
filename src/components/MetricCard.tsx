@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, MessageCircle, MousePointer, TrendingUp, Trophy, Users, Info } from 'lucide-react';
+import { Heart, MessageCircle, MousePointer, TrendingUp, Trophy, Users, Info, Share, Eye, SmilePlus, MessageSquareMore, MessageSquareHeart } from 'lucide-react';
 interface MetricCardProps {
   metric: {
     id: string;
@@ -55,6 +55,14 @@ const MetricCard: React.FC<MetricCardProps> = ({ metric }) => {
         return 'Displays the average percentage of users who clicked on your posts after seeing them. Computed as the mean CTR across all posts in the selected timeframe.';
       case 'top_post':
         return 'Highlights the post with the highest engagement rate during the selected period, helping you identify what content worked best. Engagement rate factors in both interactions and impressions.';
+      case 'impressions':
+        return 'Shows the total number of times your posts appeared in users’ feeds (“impressions total”) over the chosen period, including both organic and sponsored posts.';
+      case 'reactions':
+        return 'Aggregates all likes your posts received in the selected date range. Helps you gauge audience approval.';
+      case 'comments':
+        return 'Shows the total number of comments your posts received in the selected date range. Helps you gauge audience approval.';
+      case 'repost':
+        return 'Shows the total number of times your posts were reposted in the selected date range. Helps you gauge audience approval.';
       default:
         return '';
     }
@@ -62,7 +70,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ metric }) => {
 
   const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, gradient, icon, delay = 0, fullValue, metricId }) => (
     <div
-      className={`${gradient} min-h-40 p-5 rounded-2xl cursor-auto shadow-xl text-white transform hover:scale-105 transition-all duration-300 animate-fade-in-up relative`}
+      className={`${gradient} px-5 py-3 rounded-2xl cursor-auto shadow-xl text-white transform hover:scale-105 transition-all duration-300 animate-fade-in-up relative`}
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="flex items-center justify-between mb-4">
@@ -71,7 +79,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ metric }) => {
         </div>
         <div className="group relative">
           <Info className="w-4 h-4 text-white hover:text-black" />
-          <div className="absolute shadow-xl right-0 top-6 w-72 p-2 bg-white text-[10px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+          <div className="absolute shadow-xl -right-[20px] top-6 w-60 p-2 bg-white text-[10px] text-black rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
             {getMetricDescription(metricId)}
           </div>
         </div>
@@ -84,17 +92,25 @@ const MetricCard: React.FC<MetricCardProps> = ({ metric }) => {
   const renderMetricImage = (metric: any)=>{
     switch(metric.id){
       case 'profile_views':
-        return <Users className="w-6 h-6" />
+        return <Eye className="w-6 h-6" />
       case 'post_reach':
         return <TrendingUp className="w-6 h-6" />
       case 'post_likes':
-        return <Heart className="w-6 h-6" />
+        return <MessageSquareHeart className="w-6 h-6" />
       case 'engagement_rate':
-        return <MessageCircle className="w-6 h-6" />
+        return <MousePointer className="w-6 h-6" />
       case 'ctr':
         return <MousePointer className="w-6 h-6" />
       case 'top_post':
         return <Trophy className="w-6 h-6" />
+      case 'repost':
+        return <Share className="w-6 h-6" />
+      case 'impressions':
+        return <Users className="w-6 h-6" />
+      case 'reactions':
+        return <SmilePlus className="w-6 h-6" />
+      case 'comments':
+        return <MessageSquareMore className="w-6 h-6" />
     }
   }
 
