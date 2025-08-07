@@ -120,7 +120,7 @@ const Dashboard: React.FC = () => {
     getEngagementDataByOverTime(apiParams, setEngagementDataByOverTime, selectedMetric);
     getClicksPerPost(apiParams, setClicksPerPost);
     getInsights(apiParams).then(setInsightsData);
-    getPostEngagementTable(apiParams, setTableData);
+    // getPostEngagementTable(apiParams, setTableData);
     getTableData(apiParams, setTableData, 1, 10, setTotalPosts);
   }
 
@@ -190,7 +190,7 @@ const Dashboard: React.FC = () => {
   };
   useEffect(() => {
     getTableData(apiParams, setTableData, currentPage, 10, setTotalPosts);
-  }, [currentPage]);
+  }, [currentPage, apiParams]);
 
   const refreshAllData = async (params: ApiParams) => {
     setLoadingUix(true);
@@ -202,7 +202,7 @@ const Dashboard: React.FC = () => {
         getEngagementDataByOverTime(params, setEngagementDataByOverTime, selectedMetric),
         getClicksPerPost(params, setClicksPerPost),
         getInsights(params).then(setInsightsData),
-        getPostEngagementTable(params, setTableData)
+        // getPostEngagementTable(params, setTableData)
       ]);
     } catch (error) {
       console.error('Error refreshing data:', error);
